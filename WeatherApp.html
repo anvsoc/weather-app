@@ -1,0 +1,459 @@
+<html>
+<head>
+<body>
+<title>Weather App</title>
+<div id="card"></div>
+<div id="searchDiv">
+    <button id="searchIconButton"><img id = "searchIcon" src="searchIcon.png"></img></button>
+    <input id = "searchInput" placeholder="Enter city name" spellcheck = "false"></input>
+</div>
+<div id="dash">
+    <p id= "cityName">Mumbai</p>
+    <img id= "weatherSymbol" src = "clear.png"></img>
+    <img id= "weatherSymbolMini" src = "clear.png"></img>
+    <p id= "whatWeather">Sunny</p>
+    <img id= "windSymbolMini" src = "windspeed.png"></img>
+    <p id= "whatWind">Wind speed: 93 km/h</p>
+    <img id= "precipSymbolMini" src = "precip.png"></img>
+    <p id= "whatPrecip">Rain chance: 90%</p>
+    <p id= "Degrees">0 °C</p>
+    <p id= "State">Maharashtra, IN</p>
+    <p id= "Date">Saturday, February 10, 2024</p>
+    <p id="weeklyText">Your week at a glance</p>
+    <p id="feelsLikeCurrent">Feels Like: 0 °C</p>
+    <button id="seeHourly">See Hourly</button>
+    
+    <div id= "day1Box">
+        <img id= "day1Symbol" src = "clear.png"></img>
+        <p id= "dayName1">Tue</p>
+        <p id= "day1Temp">32° C</p>
+    </div>
+
+    <div id= "day2Box">
+        <img id= "day2Symbol" src = "clear.png"></img>
+        <p id= "dayName2">Wed</p>
+        <p id= "day2Temp">42° C</p>
+    </div>
+
+    <div id= "day3Box">
+        <img id= "day3Symbol" src = "windspeed.png"></img>
+        <p id= "dayName3">Thu</p>
+        <p id= "day3Temp">52° C</p>
+    </div>
+
+    <div id= "day4Box">
+        <img id= "day4Symbol" src = "precip.png"></img>
+        <p id= "dayName4">Fri</p>
+        <p id= "day4Temp">62° C</p>
+    </div>
+
+    <div id= "day5Box">
+        <img id= "day5Symbol" src = "clear.png"></img>
+        <p id= "dayName5">Sat</p>
+        <p id= "day5Temp">72° C</p>
+    </div>
+
+    <div id= "day6Box">
+        <img id= "day6Symbol" src = "clear.png"></img>
+        <p id= "dayName6">Sun</p>
+        <p id= "day6Temp">82° C</p>
+    </div>
+</div>
+
+<link rel="stylesheet" href="weatherStyles.css"/>
+
+<audio id="rainsound" controls loop>
+    <source src="rainsound.wav" type="audio/wav">
+  </audio>
+
+<audio id="windsound" controls loop>
+    <source src="windsound.wav" type="audio/wav">
+  </audio>
+
+<audio id="notfication">
+    <source src="notificationsound.mp3" type="audio/mp3">
+  </audio>
+
+<script>
+    var data;
+    var data2;
+    var data5;
+    var Degrees = document.getElementById("Degrees");
+    var searchInput = document.getElementById('searchInput')
+    var searchIconButton = document.getElementById("searchIconButton")
+    var cityName = document.getElementById("cityName")
+    var State = document.getElementById("State")
+    var weatherSymbol = document.getElementById("weatherSymbol");
+    var feelsLikeCurrent = document.getElementById("feelsLikeCurrent")
+    var weatherSymbolMini = document.getElementById("weatherSymbolMini")
+    var whatWeather = document.getElementById("whatWeather")
+    var whatWind = document.getElementById("whatWind")
+    var date = document.getElementById("Date")
+    var whatWind = document.getElementById("whatWind")
+    var whatPrecip = document.getElementById("whatPrecip")
+    var backdrop = document.body
+    var selection = document.querySelector(':root')
+    var seeHourly1 = document.querySelector(':root')
+
+    window.addEventListener("load", function() {
+        navigator.geolocation.getCurrentPosition(
+            async function(position) {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+                var testurl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=85be5ec7d075c8d9647e1c4b71931eda`;
+                const response3 = await fetch(testurl);
+                data3 = await response3.json();
+                cityname1 = data3.name  
+                checkCurrentWeather(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${cityname1}?unitGroup=us&key=3HHCRHCXVZ6HBJR7URWDPP5AV&contentType=json`)
+            });
+});
+
+        x = document.getElementById("rainsound");
+        sound = document.getElementById("windsound");
+        sound2 = document.getElementById("notfication")
+
+        function rainsound() {
+            x.play()
+            x.volume = 0.2
+        }
+
+        function notificationsound() {
+            sound2.play()
+            sound2.volume = 0.2
+        }
+
+        function windsound() {
+            sound.play()
+            sound.volume = 0.6
+        }
+
+        
+
+    async function checkTimezone(){
+        const response5 = await fetch(`https://api.timezonedb.com/v2.1/get-time-zone?key=G2N295WT4U99&format=json&by=zone&zone=${data.timezone}`)  
+        data5 = await response5.json()
+        return data5  
+    }
+
+
+    function forecastIconChecker(whatIcon, whichIcon) {
+        switch (whichIcon) {
+            case "forecast":
+                 desc = weatherType
+        }
+
+        switch (desc) {
+            case "cloudy":
+                whatIcon.src = "cloudy.png"
+                break
+
+            case "partly-cloudy-day":
+                whatIcon.src = "sunny-1.png"    
+                break
+
+            case "few clouds":
+                whatIcon.src = "sunny.png"
+                break
+            
+            case "clear-night":
+                whatIcon.src = "clear-1.png"
+                break
+
+            case "clear-day":
+                whatIcon.src = "clear.png"
+                break
+
+            case "Clear":
+                whatIcon.src = "clear.png"
+                break
+
+            case "rain":
+                whatIcon.src = "rain.png"
+                break
+
+            case "Rain":
+                whatIcon.src = "rain.png"
+                break
+
+            case "Snow":
+                whatIcon.src = "snow.png"
+                break
+
+            case "snow":
+                whatIcon.src = "snow.png"
+                break
+
+            case "light snow":
+                whatIcon.src = "snow.png"
+                break
+
+            case "clear sky":
+                whatIcon.src = "clear.png"
+                break
+
+            case "mist":
+                whatIcon.src = "mist.png"
+                break
+
+            case "partly-cloudy-night":
+                whatIcon.src = "night-1.png"
+                break
+
+            case "Partially cloudy":
+                whatIcon.src = "sunny-1.png"
+                break
+
+            case "Overcast":
+                whatIcon.src = "cloudy.png"
+                break
+        }
+    }
+
+    async function checkCurrentWeather(location1) {
+        const response = await fetch(location1);
+        data = await response.json()    
+        console.log(data)
+        
+
+        const synth = window.speechSynthesis;
+        const sayThis = new SpeechSynthesisUtterance(data.description);
+        synth.speak(sayThis);
+       
+        Degrees.innerHTML = Math.floor((data.currentConditions.temp - 32) * 5/9) + " °C"
+        cityName.innerHTML = data.resolvedAddress.split(", ")[0]
+        State.innerHTML = data.resolvedAddress.split(", ")[1] + ", " + data.resolvedAddress.split(", ")[2]
+        whatWind.innerHTML = "Wind Speed: " + Math.round(data.currentConditions.windspeed) + " km/h"
+        whatPrecip.innerHTML = "Rain chance: " + Math.round(data.currentConditions.precipprob) + "%"
+        feelsLikeCurrent.innerHTML = "Feels Like: " + Math.floor((data.currentConditions.feelslike - 32) * 5/9) + " °C"
+
+        var result = await checkTimezone()
+        desc2 = data.currentConditions.conditions
+        desc2 = desc2.split(', ')[0]
+
+        var hour = parseInt(result.formatted.split(" ")[1].split(":")[0])
+        
+        if (hour >= 5 && hour < 12){
+            switch (desc2) {
+                case "Partially cloudy":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop6.jpg")'
+                    whatWeather.innerHTML = "Partially Cloudy Day"
+                    searchIconButton.style.backgroundImage = "linear-gradient(to bottom left, #ff6200, #8e8cff)"
+                    searchInput.style.webkitTextFillColor = "#ff5100"
+                    weatherSymbol.src = 'sunny-1.png'
+                    break
+
+                case "Clear":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop.jpg")'
+                    whatWeather.innerHTML = "Clear sky"
+                    searchIconButton.style.backgroundImage = "linear-gradient(to bottom left, #ff6200, #8e8cff)"
+                    searchInput.style.webkitTextFillColor = "#ff5100"
+                    weatherSymbol.src = 'clear.png'
+                    break
+                
+                case "Rain":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop7.jpg")'
+                    whatWeather.innerHTML = "Rain"
+                    searchIconButton.style.backgroundImage = "linear-gradient(to bottom left, #ff6200, #8e8cff)"
+                    searchInput.style.webkitTextFillColor = "#ff5100"
+                    break
+
+                case "Overcast":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop9.jpg")'
+                    whatWeather.innerHTML = "Overcast" 
+                    weatherSymbol.src ="cloudy.png"
+                    break
+            }
+        }
+
+         if (hour >= 12 && hour < 19){
+            //backdrop.style.backgroundImage = 'url("weatherbackdrop2.jpg")'
+            //searchIconButton.style.backgroundImage = "linear-gradient(to bottom left, #ffb300, #ff4000)"
+            //searchInput.style.webkitTextFillColor = "#ffcf5e"
+
+            switch (desc2) {
+                case "Partially cloudy":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop6.jpg")'
+                    whatWeather.innerHTML = "Partially cloudy Day"
+                    weatherSymbol.src = "sunny-1.png"
+                break
+
+                case "Cloudy":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop9.jpg")'
+                    whatWeather.innerHTML = "Cloudy"
+                    weatherSymbol.src = "cloudy.png"
+                break
+
+                case "Clear":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop.jpg")'
+                    whatWeather.innerHTML = "Clear" 
+                    weatherSymbol.src ="clear.png"
+                break
+
+                case "Overcast":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop9.jpg")'
+                    whatWeather.innerHTML = "Overcast" 
+                    weatherSymbol.src ="cloudy.png"
+                    break
+
+                case "Rain":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop7.jpg")'
+                    whatWeather.innerHTML = "Rain" 
+                    weatherSymbol.src ="rain.png"
+                    break
+            }
+        }
+
+         if (hour >= 19 && hour < 21){
+                switch (desc2) {
+                case "Partially cloudy":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop3.jpg")'
+                    whatWeather.innerHTML = "Partially cloudy night"
+                    weatherSymbol.src = "night.png"
+                break
+
+                case "Cloudy":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop9.jpg")'
+                    whatWeather.innerHTML = "Cloudy night"
+                    weatherSymbol.src = "night cloudy.png"
+                break  
+
+                case "Overcast":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop9.jpg")'
+                    whatWeather.innerHTML = "Overcast" 
+                    weatherSymbol.src ="night cloudy.png"
+                    break
+
+                case "Rain":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop7.jpg")'
+                    whatWeather.innerHTML = "Rainy night" 
+                    weatherSymbol.src ="night rain.png"
+                    break
+
+                case "Clear":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop5.jpg")'
+                    whatWeather.innerHTML = "Clear night" 
+                    weatherSymbol.src ="clear-1.png"
+                break
+            }   
+            
+        }
+
+         if (hour >= 21  || hour < 5){
+
+            switch (desc2) {
+                case "Partially cloudy":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop3.jpg")'
+                    whatWeather.innerHTML = "Partially cloudy night"
+                    weatherSymbol.src ="night.png"
+                break
+
+                case "Cloudy":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop3.jpg")'
+                    whatWeather.innerHTML = "Partially cloudy night"
+                    weatherSymbol.src ="night cloudy.png"
+                break
+
+                case "Clear":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop5.jpg")'
+                    whatWeather.innerHTML = "Clear night" 
+                    weatherSymbol.src ="clear-1.png"
+                break
+
+                case "Rain":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop7.jpg")'
+                    whatWeather.innerHTML = "Rainy night" 
+                    weatherSymbol.src ="night rain.png"
+                    break
+                case "Overcast":
+                    backdrop.style.backgroundImage = 'url("weatherbackdrop9.jpg")'
+                    whatWeather.innerHTML = "Overcast" 
+                    weatherSymbol.src ="night cloudy.png"
+                    break
+
+                
+            }
+
+        }
+        
+        weatherSymbolMini.src = weatherSymbol.src
+        
+        // Forecast Weather
+        const response4 = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${data.resolvedAddress.split(", ")[0]},${data.resolvedAddress.split(", ")[1]}?key=3HHCRHCXVZ6HBJR7URWDPP5AV`)
+        data4 = await response4.json()
+
+        for(var i=1; i<7; i++){
+            var dayTemp = document.getElementById(`day${i}Temp`)
+            dayTemp.innerHTML = Math.round((data4.days[i].temp - 32)* 5/9) + "° C"
+            weatherType = data4.days[i].icon
+            var forecastSymbol = document.getElementById(`day${i}Symbol`)
+            forecastSymbol.style.scale = 2.3
+            forecastSymbol.style.top = -55
+            forecastSymbol.style.width = 43
+            forecastIconChecker(forecastSymbol, "forecast")
+        }
+
+        for (var i=1; i<7; i++) {
+            var whichDay = new Date(data4.days[i + 1].datetime)
+            var dayName1 = document.getElementById(`dayName${i}`)
+            dayName1.innerHTML = whichDay.toLocaleDateString('en-US', {weekday: 'short'})
+        }
+    }
+    function checkDate(){
+        date1 = new Date()
+        const dayOfWeek = date1.toLocaleDateString('en-US', { weekday: 'long' });
+        const month = date1.toLocaleDateString('en-US', { month: 'long' });
+        const dayOfMonth = date1.getDate();
+        const year = date1.getFullYear();
+        const formattedDate = `${dayOfWeek}, ${month} ${dayOfMonth}, ${year}`;
+        date.innerHTML = formattedDate
+    }
+
+
+    searchIconButton.onclick = async function(){
+        notificationsound()
+        await checkCurrentWeather(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${searchInput.value}?unitGroup=us&key=3HHCRHCXVZ6HBJR7URWDPP5AV&contentType=json`)
+        if (desc2 == "Rain") {
+            rainsound()
+        }
+
+        else{
+            x.pause()
+        }
+
+        if (Math.round(data.currentConditions.windspeed) > 7 ) {
+            windsound()
+        }
+
+        else{
+            sound.pause()
+        }
+    }
+
+    searchInput.addEventListener("keypress", async function(){
+        if (event.key === "Enter") {
+            await checkCurrentWeather(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${searchInput.value}?unitGroup=us&key=3HHCRHCXVZ6HBJR7URWDPP5AV&contentType=json`)
+        }
+
+        if (desc2 == "Rain") {
+            rainsound()
+        }
+
+        else{
+            x.pause()
+        }
+
+        if (Math.round(data.currentConditions.windspeed) > 7 ) {
+            windsound()
+        }
+
+        else{
+            sound.pause()
+        }
+    })
+
+checkDate()
+
+</script>
+</body>
+</head>
+</html>
